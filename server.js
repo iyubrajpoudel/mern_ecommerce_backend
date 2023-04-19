@@ -6,11 +6,20 @@
 import express from "express";
 import colors from "colors";
 import dotenv from "dotenv";
+import morgan from "morgan";
+import connectDB from "./config/db.js";
 
 const app = express();
 
 //dotenv config
 dotenv.config()
+
+// database config
+connectDB();
+
+// middlewares
+app.use(express.json());
+app.use(morgan('dev'));
 
 /* 
 // JSON response
