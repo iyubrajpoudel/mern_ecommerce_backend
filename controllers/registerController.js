@@ -91,9 +91,9 @@ export const registerController = async (req, res, next) => {
             }
         );
         */
-        const user = await new Users({ name, username, email, password: hashedPassword, phone, address });
+        const user = new Users({ name, username, email, password: hashedPassword, phone, address });
 
-        user.save();
+        await user.save();
 
         res.status(200).send({
             success: true,
