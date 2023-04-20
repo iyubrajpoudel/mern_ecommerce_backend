@@ -1,7 +1,10 @@
 // import colors from "colors";
 // named export
 import { hashPassword } from "../helpers/authHelpers.js";
+import { comparePassword } from "../helpers/authHelpers.js";
 import Users from "../models/users.js";
+import JWT from "jsonwebtoken"
+
 
 export const registerController = async (req, res, next) => {
     // console.log("Register route hitted!".bgBlue.yellow);
@@ -91,7 +94,7 @@ export const registerController = async (req, res, next) => {
             }
         );
         */
-        const user = new Users({ name, username, email, password: hashedPassword, phone, address });
+        const user = new Users({ name, username, email, password: hashedPassword, phone, address, role });
 
         await user.save();
 
@@ -114,3 +117,81 @@ export const registerController = async (req, res, next) => {
     }
 
 };
+
+export const loginController = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        let formErrors = {};
+
+        //validation
+        if (!email) {
+            formErrors.emailError = "Email is required!"
+            return res.send({
+                success: false,
+                message: "Form validation error!",
+                error: formErrors
+            })
+        }
+        if (!password) {
+            formErrors.passwordError = "Password is required!"
+            return res.send({
+                success: false,
+                message: "Form validation error!",
+                error: formErrors
+            })
+        }
+
+        // check user
+        // const user = await Users.findOne({email:email})
+        const user = await Users.findOne({ email });
+
+        if (!user) {
+            formErrors.emailError = "Email is not registered!"
+            return res.send({
+                success: false,
+                message: "Invalid credentials!",
+                error: formErrors
+            })
+        }
+
+        const matchPassword = await comparePassword(password, user.password);
+
+        if (!matchPassword) {
+            formErrors.passwordError = "Password do not match!"
+            return res.send({
+                success: false,
+                message: "Invalid credentials!",
+                error: formErrors
+            })
+        }
+
+        // sign jwt token
+        const token = await JWT.sign(
+            { _id: user._id, username: user.username, email: user.email, phone: user.phone, role: user.role },
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: "1d" }
+        );
+
+        res.status(200).send({
+            success: true,
+            message: "Logged in successfully..",
+            user: {
+                name: user.name,
+                username: user.username,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+                role: user.role,
+                // token: token,
+                token,
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: "Error occured while logging in..",
+            error
+        })
+    }
+}
