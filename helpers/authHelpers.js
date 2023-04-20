@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import colors from "colors";
 
 export const hashPassword = async (password) => {
     try {
