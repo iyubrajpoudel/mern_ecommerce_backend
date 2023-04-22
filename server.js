@@ -8,6 +8,7 @@ import colors from "colors";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
+import cors from "cors"
 
 //routes
 import authRouter from "./routes/authRoutes.js"
@@ -21,6 +22,10 @@ dotenv.config()
 connectDB();
 
 // middlewares
+
+// using cors to eliminate cross origin errors
+app.use(cors());
+
 app.use(express.json());
 app.use(morgan('dev'));
 
