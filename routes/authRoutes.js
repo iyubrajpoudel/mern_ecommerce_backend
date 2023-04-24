@@ -12,8 +12,16 @@ const router = express.Router();
 //routes
 
 router.post('/register', registerController);
+
 router.post('/login', loginController);
 
 router.get('/test', isLoggedIn, isAdmin, testController);
+
+router.get('/user-auth', isLoggedIn, (req, res) => {
+    res.status(200).send({
+        success: true,
+        message: "Access Allowed!"
+    })
+});
 
 export default router;

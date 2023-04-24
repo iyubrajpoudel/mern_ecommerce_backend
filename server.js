@@ -8,7 +8,7 @@ import colors from "colors";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
-import cors from "cors"
+import cors from "cors";
 
 //routes
 import authRouter from "./routes/authRoutes.js"

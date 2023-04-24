@@ -8,7 +8,12 @@ export const isLoggedIn = async (req, res, next) => {
         /* If token is passed in bearer,  req.headers.authorization will have 
         Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDQxNmYzNmQ2ZWM2MTM4MmEyNGQ2YmQiLCJ1c2VybmFtZSI6Inl1YnJhamFtMiIsImVtYWlsIjoieXVicmFqYW0yQGdtYWlsLmNvbSIsInBob25lIjoiOTg3NjU0MzIxMiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4MjAxMjM0NiwiZXhwIjoxNjgyMDk4NzQ2fQ.Jrk5QtmtjFFtutCMjUc3MaLJptU_RVd3bsNcgmVCxdw
         */
-        const token = req.headers.authorization.split(" ")[1];
+
+        // for postman
+        // const token = req.headers.authorization.split(" ")[1];
+
+        // for frontend
+        const token = req.headers.authorization;
         // console.log(token.bgYellow);
 
         const decodeToken = await JWT.verify(token, process.env.JWT_SECRET_KEY);
